@@ -10,10 +10,6 @@ let HOST = window.location.host;
 let brand = ['Energade', 'toffo o luxe', 'beacon allsorts', 'expert kair', 'fattis ', 'aunt caroline', 'fizz pop', 'fizzer', 'beacon', 'benny', 'golden cloud', 'bio classic', 'halls', 'bio crystal', 'hugos', 'dolly varden', 'airoma', 'morvite', 'sunglish', 'ingrams', 'oros', 'jelly tots', 'peaceful sleep', 'jeyes', 'perfect touch', 'jungle', 'purity', 'king korn', 'koo', 'roses', 'smoothies', 'colmans', 'sparkeles', 'ace', 'cresta', 'maynards', 'spray and cook', 'crosses ', 'status', 'blackcat', 'albany', 'doom', 'no hair', 'tinkies', 'ice cap', 'all gold', 'mrs H.S.Balls', 'tastic', 'sunfoil', 'sunshine d', 'd lite', 'allsome', 'sona', 'crown', 'romi', 'woodenSpoon', 'Daily', 'sun gold', 'cordon blew', 'butterific', 'pastry king', 'kremolene', 'Greaso', 'Eve', 'Britelite', 'Waves', 'Crispa', 'Al Rajah', 'huggies', 'omo', 'domestos', 'five roses', 'bakers', 'simba', 'nescafe', 'nik naks', 'freshpak', 'Cremora', 'know', 'stork', 'nola', 'liqui fruit', 'kelloggs', 'McCain', 'bokomo', 'Snowflake', 'johnsons', 'white star', 'mortein', 'nestle', 'purity', 'ariel', 'dettol', 'cadbury', 'Hand Andy', 'Pampers', 'Robertsons', 'Spice Mecca', 'Mortein', 'Always', 'Black Cat', 'I&J', 'Hinds ', 'Parmalat', 'Countr Fresh', 'Rhodes', 'Dr Hahnz', 'House of Coffee', "Pieman's", 'Clover', 'Ace']
 let data = {}
 
-
-// <pnp-cms-facet _ngcontent-spartacus-app-c333="" tabindex="0" class="focus-lock ng-star-inserted">
-// document.querySelector(`pnp-cms-facet` && `[tabindex='0']` && `[class='focus-lock ng-star-inserted']`)
-
 function index(){
   let scraperInfo = localStorage.getItem('scraperInfo') ? JSON.parse( localStorage.getItem('scraperInfo') ) : {
     index: 0
@@ -33,22 +29,17 @@ function main(){
       catIter: 0
     }
     localStorage.setItem('category', JSON.stringify(category) );
-    
     if( category.inCategory ){
-      console.log(category)
-      console.log(`href: ${category.categories[category.catIter]}`);
-      console.log(`chref: ${window.location.href}`)
       if( window.location.href != category.categories[category.catIter] ){
         window.location.href = category.categories[category.catIter];
+      } else {
+        getProducts(category);
       }
-      getProducts(category);
-      return;
-    } else {
-      getProducts()
     }
     
     function parseProducts(products){
       console.log(products);
+      console.log('parsing products')
     }
     function parseCategories(categories){
     }
@@ -57,24 +48,27 @@ function main(){
         products = document.querySelector('[data-cnstrc-search]');
         if( products ){
           clearInterval( window.interval );
-          parseProducts( products.children ); // some how collect the products
-          if( category.catIter >= ( category.categories.length-1 ) ){
-            category.catIter = 0;
-            category.categories = [];
-            category.inCategory = false;
-            localStorage.setItem('category', JSON.stringify(category) );
+          // parseProducts( products.children ); // some how collect the products
+          if( category ){
+            if( category.catIter >= ( category.categories.length-1 ) ){
+              category.catIter = 0;
+              category.categories = [];
+              category.inCategory = false;
+              localStorage.setItem('category', JSON.stringify(category) );
+              let scraperInfo = JSON.parse( localStorage.getItem('scraperInfo') );
+              scraperInfo.index += 1;
+              localStorage.setItem("scraperInfo", JSON.stringify(scraperInfo));
+            } else {
+              category.catIter += 1;
+              category.inCategory = true;
+              localStorage.setItem('category', JSON.stringify(category))
+            }
+          } else {
             let scraperInfo = JSON.parse( localStorage.getItem('scraperInfo') );
             scraperInfo.index += 1;
-            console.log(scraperInfo);
             localStorage.setItem("scraperInfo", JSON.stringify(scraperInfo));
-            console.log('get products if true');
-          } else {
-            console.log('get products if false');
-            category.catIter += 1;
-            localStorage.setItem('category', JSON.stringify(category));
           }
           nullTimeout.amt = [];
-          console.log('reload if products true');
           reload();
         } else {
           nullTimeout.amt.push(products);
@@ -83,8 +77,6 @@ function main(){
       }, 1000)
     }
     function enumerateCategory(){
-      // some searches will not have categories
-      // lets assume for now that the category section will always be the first on in pnp-cms-facet
       window.interval = setInterval(()=>{
         let categories = document.querySelector(`pnp-cms-facet` && `[tabindex='0']` && `[class='focus-lock ng-star-inserted']`);
         
@@ -97,6 +89,9 @@ function main(){
           }
           category.inCategory = ( c.length > 0 );
           category.categories = c;
+        } else {
+          console.log('here')
+          getProducts()
         }
         localStorage.setItem('category', JSON.stringify(category))
       }, 1000);
@@ -117,7 +112,6 @@ function main(){
         }
       }, 1000);
     }
-  
     window.interval = setInterval(() => {
         input = document.querySelector('[data-cnstrc-search-input]');
         searchBtn = document.querySelector('[data-cnstrc-search-submit-btn]');
@@ -129,6 +123,4 @@ function main(){
         }
     }, 1000);
 }
-
 main()
-
