@@ -27,14 +27,15 @@ function getCategories(){
         let cat = document.querySelector(`[href="${category.categories[category.catIndex].split('https://www.pnp.co.za').at(-1)}"]`);
         category.catIndex += 1;
         window._category = false;
-        localStorage.setItem('category', JSON.stringify(category) );
         cat.click();
         console.log('clicked')
         getProducts();
+        localStorage.setItem('category', JSON.stringify(category) );
         // window.location.href = 'http://www.pnp.co.za';
       } else {
-        // perhaps iterate through the list here
+        // perhaps iterate through the brand list here and also set window._category to true
         localStorage.removeItem('category');
+        // category.inCat = false;
         window.location.href = 'http://www.pnp.co.za';
       }
     }
@@ -51,7 +52,9 @@ function getProducts(timeoutUrl=null){
         getCategories();
       } else {// else put it in a dict object 
         console.log(products);
-        // window.location.href = 'https://www.pnp.co.za';
+        setTimeout(()=>{
+          window.location.href = 'https://www.pnp.co.za';
+        }, 5000)
       }
     } else {
       timeout(url=timeoutUrl);
@@ -74,7 +77,7 @@ function search(product_name){
 }
 
 function main(){
-  search('ultra mel');
+  search('nestle');
 }
 main()
 
