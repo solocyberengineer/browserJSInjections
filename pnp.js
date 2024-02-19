@@ -1,4 +1,4 @@
-let nullTimeout = { times: 3, timeouts: 0 };
+let nullTimeout = { times: 5, timeouts: 0 };
 let category = localStorage.getItem('category') ? JSON.parse(localStorage.getItem('category')) : { inCat: false, catIndex: 0, categories: [] };
 let scraperInfo = localStorage.getItem('scraperInfo') ? JSON.parse(localStorage.getItem('scraperInfo')) : {index: 0, brands: []};
 window.data = localStorage.getItem('data') ? JSON.parse(localStorage.getItem('data')) : {}; // { <brand>: {<categories>: [{<product-name>: <name>, <price>: <price>}]} }
@@ -20,12 +20,13 @@ function setProducts(products){
       if( !window.data[brandName]['no category'] ) window.data[brandName]['no category'] = [];
       window.data[brandName]['no category'].push({productName, productPrice, productImage})
     } else {
-      if( !window.data[brandName]['categories'] ) window.data[brandName]['categories'] = [];
+      if( !window.data[brandName]['categories'] ) window.data[brandName]['categories'] = {};
       if( !window.data[brandName]['categories'][_category] ) window.data[brandName]['categories'][_category] = [];
       window.data[brandName]['categories'][_category].push({productName, productPrice, productImage});
       console.log('categories')
       console.log(_category)
     }
+    console.log(window.data)
     localStorage.setItem('data', JSON.stringify(window.data));
   }
 }
@@ -81,7 +82,7 @@ function getProducts(timeoutUrl=null){
       } else {
         setProducts(products);
         setTimeout(()=>{
-          // window.location.href = 'https://www.pnp.co.za';
+          window.location.href = 'https://www.pnp.co.za';
         }, 1000)
       }
     } else {
