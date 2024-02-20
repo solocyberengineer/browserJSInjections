@@ -16,7 +16,7 @@ function setProducts(products){
     let brandName = document.querySelector('[data-cnstrc-search-input]').value;
     // data.push({brand: brandName});
     if( !window.data[brandName] ) window.data[brandName] = {};
-    if( _category.indexOf('category') < 0 ){
+    if( _category.indexOf('category') >= 0 ){
       if( !window.data[brandName]['no category'] ) window.data[brandName]['no category'] = [];
       window.data[brandName]['no category'].push({productName, productPrice, productImage})
     } else {
